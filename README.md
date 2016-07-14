@@ -9,3 +9,7 @@ It's an Java Application in Gradle terminology.
 But if you don't know anything about Gradle, just run this:
 `$ ./gradlew installApp`
 `$ ./build/install/hamming/bin/hamming`
+
+# Disclaimer
+
+It's not pretend to be the best implementation. It's just a demo of approaches.
