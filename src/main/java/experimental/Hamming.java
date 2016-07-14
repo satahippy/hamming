@@ -1,26 +1,31 @@
 package experimental;
 
+import java.util.Arrays;
+
 public class Hamming {
 
     private enum Action {
-        encode, decode
+        encode, decode, distance
     }
 
     public static void main(String[] args) {
         if (args.length < 2) {
             System.out.println("Usage: [encode|decode] <bits>");
+            System.out.println("Usage: distance <bits1> <bits2> ...");
             System.exit(1);
         }
 
         Action action = Action.valueOf(args[0]);
-        String bits = args[1];
 
         switch (action) {
             case encode:
-                System.out.println(encode(bits));
+                System.out.println(encode(args[1]));
                 break;
             case decode:
-                System.out.println(decode(bits));
+                System.out.println(decode(args[1]));
+                break;
+            case distance:
+                System.out.println(distance(Arrays.copyOfRange(args, 1, args.length)));
                 break;
         }
     }
@@ -73,6 +78,34 @@ public class Hamming {
         }
 
         return bitArrayToString(unsignedBits);
+    }
+
+    public static int distance(String[] inputs) {
+        int totalDistance = 0;
+        for (int i = 0; i < inputs.length - 1; i++) {
+            for (int j = i + 1; j < inputs.length; j++) {
+                int localDistance = distance(inputs[i], inputs[j]);
+                if (localDistance > totalDistance) {
+                    totalDistance = localDistance;
+                }
+            }
+        }
+        return totalDistance;
+    }
+
+    private static int distance(String string1, String string2) {
+        if (string1.length() != string2.length()) {
+            throw new RuntimeException("Distance can be calculated only with the same size inputs");
+        }
+
+        int distance = 0;
+        int length = string1.length();
+        for (int i = 0; i < length; i++) {
+            if (string1.charAt(i) != string2.charAt(i)) {
+                distance++;
+            }
+        }
+        return distance;
     }
 
     private static boolean isPowerOfTwo(int number) {
